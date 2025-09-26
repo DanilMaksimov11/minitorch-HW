@@ -284,7 +284,7 @@ def zipWith(f: Callable, array_x: Iterable, array_y: Iterable) -> Iterable:
         yield f(x, y)
 
 
-def reduce(f: Callable, array: Iterable) -> Any:
+def reduce(f: Callable, array: Iterable):
     """Reduces an iterable to a single value using a binary function.
     
     Applies the function cumulatively from left to right. For example:
@@ -335,7 +335,7 @@ def addLists(array_x: Iterable, array_y: Iterable) -> Iterable:
     return zipWith(add, array_x, array_y)
 
 
-def sum(array: Iterable) -> Any:
+def sum(array: Iterable):
     """Computes the sum of all elements in the iterable.
     
     Args:
@@ -350,7 +350,7 @@ def sum(array: Iterable) -> Any:
         return 0
 
 
-def prod(array: Iterable) -> Any:
+def prod(array: Iterable):
     """Computes the product of all elements in the iterable.
     
     Args:
