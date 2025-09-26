@@ -22,9 +22,14 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     Returns:
         An approximation of $f'_i(x_0, \ldots, x_{n-1})$
     """
-    # TODO: Implement for Task 1.1.
-    raise NotImplementedError('Need to implement for Task 1.1')
 
+    lhs_vals = list(vals)
+    lhs_vals[arg] += epsilon
+
+    rhs_vals = list(vals)
+    rhs_vals[arg] -= epsilon
+
+    return (f(*lhs_vals) - f(*rhs_vals))/(2*epsilon)
 
 variable_count = 1
 
@@ -61,8 +66,19 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+
+    topological_list = []
+    ids_list = []
+    
+    def visit(var: Variable):
+        for parent in var.parents:
+            if parent.unique_id not in ids_list:
+                visit(parent)
+        topological_list.append(var)
+        ids_list.append(var.unique_id)
+
+    visit(variable)
+    return topological_list[::-1]
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -76,9 +92,19 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
 
+    var_deriv_dict = {variable.unique_id: deriv}
+    topological_list = topological_sort(variable)
+
+    for node in topological_list:
+        if node.is_leaf():
+            node.accumulate_derivative(var_deriv_dict[node.unique_id])
+        else:
+            for parent, derivative in node.chain_rule(d_output = var_deriv_dict[node.unique_id]):
+                if parent.unique_id not in var_deriv_dict:
+                    var_deriv_dict[parent.unique_id] = derivative
+                else:
+                    var_deriv_dict[parent.unique_id] += derivative
 
 @dataclass
 class Context:
