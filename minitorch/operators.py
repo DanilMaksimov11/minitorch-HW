@@ -254,50 +254,112 @@ def relu_back(x: float, dL_dy: float) -> float:
 
 # Small practice library of elementary higher-order functions.
 
-# Implement the following core functions
-# - map
 def map(f: Callable, array: Iterable) -> Iterable:
+    """Applies a function to each element in an iterable.
+    
+    Args:
+        f: A callable that takes one argument and returns a value.
+        array: An iterable of elements to be processed.
+        
+    Yields:
+        The result of applying f to each element of the input iterable.
+    """
     for x in array:
         yield f(x)
 
-# - zipWith
-def zipWith(f: Callable, array_x: Iterable, array_y: Iterable):
+
+def zipWith(f: Callable, array_x: Iterable, array_y: Iterable) -> Iterable:
+    """Combines two iterables element-wise using a given function.
+    
+    Args:
+        f: A callable that takes two arguments and returns a value.
+        array_x: First iterable for combination.
+        array_y: Second iterable for combination.
+        
+    Yields:
+        The result of applying f to each pair (x, y) from the input iterables.
+        Stops when the shorter iterable is exhausted.
+    """
     for x, y in zip(array_x, array_y):
         yield f(x, y)
 
-# - reduce
-def reduce(f: Callable, array: Iterable):
-    
-    #Создается итератор it
-    it = iter(array)
 
-    #next - возвращает следующий элемент из итератора
+def reduce(f: Callable, array: Iterable) -> Any:
+    """Reduces an iterable to a single value using a binary function.
+    
+    Applies the function cumulatively from left to right. For example:
+    reduce(f, [a, b, c, d]) = f(f(f(a, b), c), d)
+    
+    Args:
+        f: A callable that takes two arguments and returns a value.
+        array: An iterable to be reduced. Must be non-empty unless handled by caller.
+        
+    Returns:
+        The final accumulated value.
+        
+    Raises:
+        StopIteration: If the input iterable is empty.
+    """
+    it = iter(array)
     value = next(it)
     for element in it:
         value = f(value, element)
     return value
-#
+
+
 # Use these to implement
-# - negList : negate a list
-def negList(array: Iterable):
+
+def negList(array: Iterable) -> Iterable:
+    """Negates each element in the input iterable.
+    
+    Args:
+        array: An iterable of numbers.
+        
+    Returns:
+        An iterable where each element is negated.
+    """
     return map(neg, array)
 
-# - addLists : add two lists together
-def addLists(array_x: Iterable, array_y: Iterable):
-    return zipWith (add, array_x, array_y)
 
-# - sum: sum lists
-def sum(array: Iterable):
+def addLists(array_x: Iterable, array_y: Iterable) -> Iterable:
+    """Adds elements from two iterables pairwise.
+    
+    Args:
+        array_x: First iterable of numbers.
+        array_y: Second iterable of numbers.
+        
+    Returns:
+        An iterable containing pairwise sums.
+        Stops when the shorter input iterable is exhausted.
+    """
+    return zipWith(add, array_x, array_y)
+
+
+def sum(array: Iterable) -> Any:
+    """Computes the sum of all elements in the iterable.
+    
+    Args:
+        array: An iterable of numbers. Can be empty.
+        
+    Returns:
+        The sum of all elements. Returns 0 for empty input.
+    """
     if array:
         return reduce(add, array)
     else:
         return 0
 
-# - prod: take the product of lists
-def prod(array: Iterable):
+
+def prod(array: Iterable) -> Any:
+    """Computes the product of all elements in the iterable.
+    
+    Args:
+        array: An iterable of numbers. Can be empty.
+        
+    Returns:
+        The product of all elements. Returns 1 for empty input.
+    """
     if array:
         return reduce(mul, array)
     else:
         return 1
-
-# TODO: Implement for Task 0.3.
